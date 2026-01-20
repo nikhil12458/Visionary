@@ -95,13 +95,19 @@ main {
 
   .canvas {
     flex: 1;
+    height: 100vh;
     background-color: var(--bg-canvas);
+    position: relative;
 
-    element {
+    .element {
       position: absolute;
       cursor: grab;
     }
 
+    .element:active{
+        cursor: grabbing;
+    }
+    
     .element.selected {
       outline: 2px solid var(--selected-outline);
       outline-style: dashed;
