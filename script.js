@@ -4,6 +4,7 @@ const textButton = document.querySelector(".text-box");
 
 const data = {
   elements: [],
+  selected: null,
 };
 
 let id = 1;
@@ -35,7 +36,12 @@ function increaseElemLeft(elementWidth) {
 
 function createElem(elem) {
   const div = document.createElement("div");
+  const prevSelected = canvas.querySelector(".selected");
+  if (prevSelected) {
+    prevSelected.classList.remove("selected");
+  }
   div.classList.add("element", "rect", "selected");
+  div.id = elem.id;
   div.style.width = elem.width + "px";
   div.style.height = elem.height + "px";
   div.style.left = elem.x + "px";
@@ -46,7 +52,6 @@ function createElem(elem) {
       ? (div.style.padding = "1rem")
       : null
     : null;
-
   canvas.appendChild(div);
 }
 
@@ -66,6 +71,7 @@ rectButton.addEventListener("click", () => {
     },
   };
   data.elements.push(rect);
+  data.selected = rect.id;
   createElem(rect);
 });
 
@@ -86,5 +92,14 @@ textButton.addEventListener("click", () => {
     content: "some text",
   };
   data.elements.push(text);
+  data.selected = text.id;
   createElem(text);
+});
+
+canvas.addEventListener("click", (e) => {
+  const selected = canvas.querySelector(".selected");
+  if (selected) selected.classList.remove("selected");
+  canvas
+    .querySelectorAll(".element")
+    [e.target.id - 1].classList.add("selected");
 });
