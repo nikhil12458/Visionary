@@ -4,6 +4,25 @@ const textButton = document.querySelector(".text-box");
 const layer = document.querySelector(".layers .bottom");
 const zPlus = document.querySelector(".zIndex .increase");
 const zMinus = document.querySelector(".zIndex .decrease");
+const widthField = document.querySelector(".dimensions .width input");
+const heightField = document.querySelector(".dimensions .height input");
+const xPositionField = document.querySelector(".position .x input");
+const yPositionField = document.querySelector(".position .y input");
+const opacityField = document.querySelector(".appearance .opacity input");
+const cornerField = document.querySelector(".appearance .corner input");
+const fillInput = document.querySelector(".fill input");
+const textAreaField = document.querySelector(".textContent textarea");
+
+const fields = [
+  widthField,
+  heightField,
+  xPositionField,
+  yPositionField,
+  opacityField,
+  cornerField,
+  fillInput,
+  textAreaField,
+];
 
 const data = {
   elements: [],
@@ -94,6 +113,8 @@ function updateLayer() {
 function syncLayerElement() {
   elementSelector();
   layerSelector();
+  disableInputs();
+  toggleTextArea();
 }
 
 function deleteElement() {
@@ -144,6 +165,12 @@ function zIncrease() {
   saveLocalStorage();
 }
 
+function getSelectedElem() {
+  if (!data.selected) return;
+
+  return data.elements.find((elem) => String(elem.id) === data.selected);
+}
+
 function zDecrease() {
   if (!data.selected) return;
 
@@ -167,6 +194,41 @@ function zDecrease() {
 
   syncLayerElement();
   saveLocalStorage();
+}
+
+function disableInputs() {
+  if (data.selected) {
+    fields.forEach((inp) => {
+      inp.removeAttribute("disabled");
+    });
+  } else {
+    fields.forEach((inp) => {
+      inp.setAttribute("disabled", "true");
+    });
+  }
+}
+
+function toggleTextArea() {
+  const selectedElem = getSelectedElem();
+
+  if (selectedElem && selectedElem.type === "text") {
+    textAreaField.removeAttribute("disabled");
+  } else {
+    textAreaField.setAttribute("disabled", true);
+  }
+}
+
+function updateTextContent() {
+  if (!data.selected) return;
+
+  const selectedElement = getSelectedElem();
+
+  if (selectedElement && selectedElement.type === "text") {
+    selectedElement.content = textAreaField.value;
+  }
+
+  canvas.innerHTML = "";
+  data.elements.forEach(createElem);
 }
 
 function createElem(elem) {
@@ -257,7 +319,7 @@ layer.addEventListener("click", (elem) => {
 });
 
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Delete" || e.key === "Backspace") {
+  if (e.key === "Delete") {
     deleteElement();
   }
 });
@@ -273,4 +335,12 @@ zMinus.addEventListener("click", () => {
 
   zDecrease();
 });
+
+textAreaField.addEventListener("input", () => {
+  updateTextContent();
+  saveLocalStorage();
+});
+
+disableInputs();
+toggleTextArea();
 getLocalStorage();
