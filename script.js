@@ -115,6 +115,13 @@ function syncLayerElement() {
   layerSelector();
   disableInputs();
   toggleTextArea();
+  syncOpacity();
+  syncWidth();
+  syncHeight();
+  syncX();
+  syncY();
+  syncCorner();
+  syncFill();
 }
 
 function deleteElement() {
@@ -208,13 +215,139 @@ function disableInputs() {
   }
 }
 
+function updateOpacity() {
+  if (!data.selected) return;
+
+  const selectedElement = getSelectedElem();
+
+  selectedElement.opacity = opacityField.value;
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncOpacity() {
+  const selectedElement = getSelectedElem();
+
+  if (!selectedElement) return (opacityField.value = 0);
+
+  opacityField.value = selectedElement.opacity;
+}
+
+function updateWidth() {
+  if (!data.selected) return;
+
+  const selectedElement = getSelectedElem();
+
+  selectedElement.width = widthField.value;
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncWidth() {
+  const selectedElement = getSelectedElem();
+
+  if (!selectedElement) return (widthField.value = 0);
+
+  widthField.value = selectedElement.width;
+}
+
+function updateHeight() {
+  const selectedElement = getSelectedElem();
+
+  selectedElement.height = heightField.value;
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncHeight() {
+  const selectedElement = getSelectedElem();
+
+  if (!selectedElement) return (heightField.value = 0);
+
+  heightField.value = selectedElement.height;
+}
+
+function updateX() {
+  const selectedElement = getSelectedElem();
+
+  selectedElement.x = xPositionField.value;
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncX() {
+  const selectedElement = getSelectedElem();
+  if (!selectedElement) return (xPositionField.value = 0);
+
+  xPositionField.value = Number(selectedElement.x).toFixed(2);
+}
+
+function updateY() {
+  const selectedElement = getSelectedElem();
+  selectedElement.y = yPositionField.value;
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncY() {
+  const selectedElement = getSelectedElem();
+  if (!selectedElement) return (yPositionField.value = 0);
+  yPositionField.value = Number(selectedElement.y).toFixed(2);
+}
+
+function updateCorner() {
+  const selectedElement = getSelectedElem();
+  if (!selectedElement.type === "rect") return;
+  selectedElement.corner = cornerField.value;
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncCorner() {
+  const selectedElement = getSelectedElem();
+
+  if (!selectedElement) return (cornerField.value = 0);
+
+  cornerField.value = selectedElement.corner;
+}
+
+function updateFill() {
+  const selectedElement = getSelectedElem();
+
+  selectedElement.type === "text"
+    ? (selectedElement.styles.color = fillInput.value)
+    : (selectedElement.styles.bg = fillInput.value);
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncFill() {
+  const selectedElement = getSelectedElem();
+
+  if (!selectedElement) return (fillInput.value = "#ffffff");
+
+  fillInput.value =
+    selectedElement.type === "text"
+      ? selectedElement.styles.color
+      : selectedElement.styles.bg;
+}
+
 function toggleTextArea() {
   const selectedElem = getSelectedElem();
 
   if (selectedElem && selectedElem.type === "text") {
     textAreaField.removeAttribute("disabled");
+    textAreaField.value = selectedElem.content || "";
   } else {
     textAreaField.setAttribute("disabled", true);
+    textAreaField.value = "";
   }
 }
 
@@ -228,7 +361,7 @@ function updateTextContent() {
   }
 
   canvas.innerHTML = "";
-  data.elements.forEach(createElem);
+  data.elements.forEach((elem) => createElem(elem));
 }
 
 function createElem(elem) {
@@ -242,6 +375,8 @@ function createElem(elem) {
   div.style.zIndex = elem.zIndex;
   div.style.backgroundColor = elem.styles.bg;
   elem.corner ? (div.style.borderRadius = elem.corner + "px") : "";
+  div.style.opacity = elem.opacity / 100;
+  elem.styles.color ? (div.style.color = elem.styles.color) : "";
   elem.content
     ? (div.innerText = elem.content)
       ? (div.style.padding = "1rem")
@@ -262,11 +397,12 @@ rectButton.addEventListener("click", () => {
     y: increaseElemTop(height),
     x: increaseElemLeft(width),
     styles: {
-      bg: "red",
+      bg: "#ff0000",
       borderRadius: 30,
     },
     zIndex: id,
     corner: 0,
+    opacity: 100,
   };
   data.elements.push(rect);
   data.selected = String(id);
@@ -289,10 +425,13 @@ textButton.addEventListener("click", () => {
     x: increaseElemLeft(width),
     styles: {
       bg: "transparent",
+      color: "#000000",
       borderRadius: 30,
     },
     zIndex: id,
+    corner: 0,
     content: "some text",
+    opacity: 100,
   };
   data.elements.push(text);
   data.selected = String(id);
@@ -336,9 +475,48 @@ zMinus.addEventListener("click", () => {
   zDecrease();
 });
 
+widthField.addEventListener("input", () => {
+  updateWidth();
+  saveLocalStorage();
+});
+
+heightField.addEventListener("input", () => {
+  updateHeight();
+  saveLocalStorage();
+});
+
+xPositionField.addEventListener("input", () => {
+  updateX();
+  saveLocalStorage();
+});
+
+yPositionField.addEventListener("input", () => {
+  updateY();
+  saveLocalStorage();
+});
+
+opacityField.addEventListener("input", () => {
+  updateOpacity();
+  saveLocalStorage();
+});
+
+cornerField.addEventListener("input", () => {
+  updateCorner();
+  saveLocalStorage();
+});
+
+fillInput.addEventListener("input", () => {
+  updateFill();
+  saveLocalStorage();
+});
+
 textAreaField.addEventListener("input", () => {
   updateTextContent();
   saveLocalStorage();
+});
+
+textAreaField.addEventListener("blur", () => {
+  textAreaField.value = "";
 });
 
 disableInputs();
