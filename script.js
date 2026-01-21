@@ -34,18 +34,21 @@ function increaseElemLeft(elementWidth) {
   return elementLeft;
 }
 
+function elementSelector() {
+  canvas.querySelectorAll(".element").forEach((elem) => {
+    elem.classList.toggle("selected", elem.id === data.selected);
+  });
+}
+
 function createElem(elem) {
   const div = document.createElement("div");
-  const prevSelected = canvas.querySelector(".selected");
-  if (prevSelected) {
-    prevSelected.classList.remove("selected");
-  }
-  div.classList.add("element", "rect", "selected");
+  div.classList.add("element", "rect");
   div.id = elem.id;
-  div.style.width = elem.width + "px";
-  div.style.height = elem.height + "px";
+  div.style.width = elem.type === "rect" ? elem.width + "px" : "fit-content";
+  div.style.height = elem.type === "rect" ? elem.height + "px" : "fit-content";
   div.style.left = elem.x + "px";
   div.style.top = elem.y + "px";
+  div.style.zIndex = elem.id;
   div.style.backgroundColor = elem.styles.bg;
   elem.content
     ? (div.innerText = elem.content)
@@ -53,6 +56,8 @@ function createElem(elem) {
       : null
     : null;
   canvas.appendChild(div);
+  data.selected = String(elem.id);
+  elementSelector();
 }
 
 rectButton.addEventListener("click", () => {
@@ -97,9 +102,8 @@ textButton.addEventListener("click", () => {
 });
 
 canvas.addEventListener("click", (e) => {
-  const selected = canvas.querySelector(".selected");
-  if (selected) selected.classList.remove("selected");
-  canvas
-    .querySelectorAll(".element")
-    [e.target.id - 1].classList.add("selected");
+  const elementId = e.target.id;
+  if (!elementId) data.selected = null;
+  else data.selected = elementId;
+  elementSelector();
 });
