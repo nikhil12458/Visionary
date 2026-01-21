@@ -519,6 +519,54 @@ textAreaField.addEventListener("blur", () => {
   textAreaField.value = "";
 });
 
+document.addEventListener("keydown", (e) => {
+  const selectedElement = getSelectedElem();
+
+  if (selectedElement) {
+    if (e.key === "ArrowUp") {
+      if (selectedElement.y - 5 >= 0) {
+        selectedElement.y -= 5;
+      }
+
+      canvas.innerHTML = "";
+
+      data.elements.forEach((elem) => createElem(elem));
+      saveLocalStorage();
+      syncLayerElement();
+    } else if (e.key === "ArrowDown") {
+      if (
+        selectedElement.y + selectedElement.height + 5 <=
+        canvas.clientHeight
+      ) {
+        selectedElement.y += 5;
+      }
+
+      canvas.innerHTML = "";
+      data.elements.forEach((elem) => createElem(elem));
+      saveLocalStorage();
+      syncLayerElement();
+    } else if (e.key === "ArrowRight") {
+      if (selectedElement.x + selectedElement.width + 5 <= canvas.clientWidth) {
+        selectedElement.x += 5;
+      }
+
+      canvas.innerHTML = "";
+      data.elements.forEach((elem) => createElem(elem));
+      saveLocalStorage();
+      syncLayerElement();
+    } else if (e.key === "ArrowLeft") {
+      if (selectedElement.x - 5 >= 0) {
+        selectedElement.x -= 5;
+      }
+
+      canvas.innerHTML = "";
+      data.elements.forEach((elem) => createElem(elem));
+      saveLocalStorage();
+      syncLayerElement();
+    }
+  }
+});
+
 disableInputs();
 toggleTextArea();
 getLocalStorage();
