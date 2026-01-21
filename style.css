@@ -55,10 +55,15 @@ main {
   position: relative;
   display: flex;
 
-  .layers,
-  .properties {
+  .layers {
     height: 100%;
     width: 15rem;
+    background-color: var(--bg-panel);
+  }
+
+  .properties {
+    height: 100%;
+    width: 18rem;
     background-color: var(--bg-panel);
   }
 
@@ -92,6 +97,7 @@ main {
       p {
         font-weight: 700;
         padding: 0.5rem;
+        color: var(--text-primary);
       }
     }
     .bottom {
@@ -109,6 +115,236 @@ main {
 
   .properties {
     border-left: 1px solid var(--border-panel);
+    overflow-y: auto;
+
+    h3 {
+      padding: 0.65rem 0.5rem;
+      color: var(--text-primary);
+    }
+    .line {
+      height: 2px;
+      width: 100%;
+      background-color: var(--bg-toolbar);
+      border-radius: 3rem;
+    }
+
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      padding-top: 1rem;
+      gap: 2rem;
+
+      .dimensions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        flex-direction: column;
+        p {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+        .content {
+          display: flex;
+          gap: 2%;
+          justify-content: center;
+          .width,
+          .height {
+            display: flex;
+            width: 48%;
+            background-color: #ffffff;
+            outline: 1px solid var(--accent-secondary);
+            border-radius: 0.2rem;
+            gap: 0.4rem;
+            span {
+              display: grid;
+              place-items: center;
+              min-width: 1.4rem;
+              font-size: 1.2rem;
+              font-weight: 700;
+              color: var(--text-secondary);
+              border-right: 2px solid var(--text-secondary);
+            }
+            input {
+              width: 100%;
+              background-color: transparent;
+              border: none;
+              outline: none;
+              color: var(--text-secondary);
+              font-size: 1.2rem;
+              font-weight: 500;
+            }
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+          }
+        }
+      }
+
+      .position {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        flex-direction: column;
+        p {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+        .content {
+          display: flex;
+          gap: 2%;
+          justify-content: center;
+          .x,
+          .y {
+            display: flex;
+            width: 48%;
+            background-color: #ffffff;
+            outline: 1px solid var(--accent-secondary);
+            border-radius: 0.2rem;
+            gap: 0.4rem;
+            span {
+              display: grid;
+              place-items: center;
+              min-width: 1.4rem;
+              font-size: 1.2rem;
+              font-weight: 700;
+              color: var(--text-secondary);
+              border-right: 2px solid var(--text-secondary);
+            }
+            input {
+              width: 100%;
+              background-color: transparent;
+              border: none;
+              outline: none;
+              color: var(--text-secondary);
+              font-size: 1.2rem;
+              font-weight: 500;
+            }
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+          }
+        }
+      }
+
+      .zIndex {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        flex-direction: column;
+        padding-left: 0.2rem;
+        p {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+
+        .content {
+          display: flex;
+          gap: 2rem;
+          .increase,
+          .decrease {
+            width: 2rem;
+            height: 2rem;
+            border: 2px solid var(--text-secondary);
+            img{
+              width: 100%;
+            }
+            &:active {
+              transform: scale(1.2);
+            }
+          }
+        }
+      }
+
+      .appearance {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        flex-direction: column;
+        p {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+        .content {
+          display: flex;
+          gap: 2%;
+          justify-content: center;
+          .opacity,
+          .corner {
+            display: flex;
+            gap: 0.5rem;
+            flex-direction: column;
+            width: 48%;
+            p {
+              font-size: 1.2rem;
+              font-weight: 700;
+              color: var(--text-secondary);
+            }
+            input {
+              border-radius: 0.2rem;
+              padding-inline: 0.2rem;
+              width: 100%;
+              background-color: #ffffff;
+              border: none;
+              outline: 1px solid var(--accent-secondary);
+              color: var(--text-secondary);
+              font-size: 1.2rem;
+              font-weight: 500;
+            }
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+          }
+        }
+      }
+
+      .fill {
+        display: flex;
+        flex-direction: column;
+        padding-inline: 0.3rem;
+        gap: 0.5rem;
+        p {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+
+        input {
+          width: 30%;
+        }
+      }
+
+      .textContent {
+        display: flex;
+        flex-direction: column;
+        padding-inline: 0.3rem;
+        gap: 0.5rem;
+        p {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+        textarea {
+          padding-inline: 0.25rem;
+          padding-block: 0.25rem;
+          font-size: 1rem;
+          color: var(--text-secondary);
+          font-weight: 400;
+          height: 9rem;
+          resize: none;
+          overflow-y: auto;
+        }
+      }
+    }
   }
 
   .canvas {

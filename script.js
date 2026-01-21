@@ -2,6 +2,8 @@ const canvas = document.querySelector(".canvas");
 const rectButton = document.querySelector(".rect-box");
 const textButton = document.querySelector(".text-box");
 const layer = document.querySelector(".layers .bottom");
+const zPlus = document.querySelector(".zIndex .increase");
+const zMinus = document.querySelector(".zIndex .decrease");
 
 const data = {
   elements: [],
@@ -73,7 +75,9 @@ function layerSelector() {
 function updateLayer() {
   layer.innerHTML = "";
 
-  const saved = data.elements;
+  const saved = [...data.elements].sort((a, b) => {
+    return b.zIndex - a.zIndex;
+  });
 
   saved.forEach((elem) => {
     const div = document.createElement("div");
@@ -92,6 +96,79 @@ function syncLayerElement() {
   layerSelector();
 }
 
+function deleteElement() {
+  if (!data.selected) return;
+
+  for (i = 0; i < data.elements.length; i++) {
+    if (data.elements[i].id == data.selected) {
+      data.elements.splice(i, 1);
+      break;
+    }
+  }
+
+  canvas.innerHTML = "";
+  layer.innerHTML = "";
+
+  data.elements.forEach((elem) => createElem(elem));
+
+  data.selected = null;
+
+  updateLayer();
+  syncLayerElement();
+
+  saveLocalStorage();
+}
+
+function zIncrease() {
+  if (!data.selected) return;
+
+  const currentElem = data.elements.find((elem) => {
+    return String(elem.id) === data.selected;
+  });
+
+  const nextElem = data.elements.find((elem) => {
+    return elem.zIndex === currentElem.zIndex + 1;
+  });
+
+  if (!nextElem) return;
+
+  [currentElem.zIndex, nextElem.zIndex] = [nextElem.zIndex, currentElem.zIndex];
+
+  canvas.innerHTML = "";
+  layer.innerHTML = "";
+
+  data.elements.forEach((elem) => createElem(elem));
+
+  updateLayer();
+  syncLayerElement();
+  saveLocalStorage();
+}
+
+function zDecrease() {
+  if (!data.selected) return;
+
+  const currentElem = data.elements.find((elem) => {
+    return String(elem.id) === data.selected;
+  });
+
+  const lastElem = data.elements.find((elem) => {
+    return elem.zIndex === currentElem.zIndex - 1;
+  });
+
+  if (!lastElem) return;
+
+  [currentElem.zIndex, lastElem.zIndex] = [lastElem.zIndex, currentElem.zIndex];
+
+  canvas.innerHTML = "";
+  layer.innerHTML = "";
+
+  data.elements.forEach((elem) => createElem(elem));
+  updateLayer();
+
+  syncLayerElement();
+  saveLocalStorage();
+}
+
 function createElem(elem) {
   const div = document.createElement("div");
   div.classList.add("element", "rect");
@@ -102,6 +179,7 @@ function createElem(elem) {
   div.style.top = elem.y + "px";
   div.style.zIndex = elem.zIndex;
   div.style.backgroundColor = elem.styles.bg;
+  elem.corner ? (div.style.borderRadius = elem.corner + "px") : "";
   elem.content
     ? (div.innerText = elem.content)
       ? (div.style.padding = "1rem")
@@ -126,6 +204,7 @@ rectButton.addEventListener("click", () => {
       borderRadius: 30,
     },
     zIndex: id,
+    corner: 0,
   };
   data.elements.push(rect);
   data.selected = String(id);
@@ -177,4 +256,21 @@ layer.addEventListener("click", (elem) => {
   saveLocalStorage();
 });
 
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Delete" || e.key === "Backspace") {
+    deleteElement();
+  }
+});
+
+zPlus.addEventListener("click", () => {
+  if (!data.selected) return;
+
+  zIncrease();
+});
+
+zMinus.addEventListener("click", () => {
+  if (!data.selected) return;
+
+  zDecrease();
+});
 getLocalStorage();
