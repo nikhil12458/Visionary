@@ -87,6 +87,24 @@ main {
       background-color: var(--bg-toolbar);
       border-radius: 3rem;
     }
+
+    .title {
+      p {
+        font-weight: 700;
+        padding: 0.5rem;
+      }
+    }
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 0.24rem;
+      padding-block: 0.75rem;
+      padding-inline: 0.4rem;
+
+      .selected {
+        outline: 1px solid #0f172a;
+      }
+    }
   }
 
   .properties {
@@ -104,10 +122,10 @@ main {
       cursor: grab;
     }
 
-    .element:active{
-        cursor: grabbing;
+    .element:active {
+      cursor: grabbing;
     }
-    
+
     .element.selected {
       outline: 2px solid var(--selected-outline);
       outline-style: dashed;
@@ -125,6 +143,7 @@ main {
     padding: 0.6rem 1rem;
     border-radius: 0.5rem;
     border: 1px solid var(--border-toolbar);
+    z-index: 999999;
 
     .selectionCard {
       width: 3rem;

@@ -1,13 +1,37 @@
 const canvas = document.querySelector(".canvas");
 const rectButton = document.querySelector(".rect-box");
 const textButton = document.querySelector(".text-box");
+const layer = document.querySelector(".layers .bottom");
 
 const data = {
   elements: [],
   selected: null,
 };
 
-let id = 1;
+function saveLocalStorage() {
+  localStorage.setItem("canvasData", JSON.stringify(data));
+}
+
+function getLocalStorage() {
+  const canvasData = JSON.parse(localStorage.getItem("canvasData"));
+
+  if (!canvasData) return;
+
+  canvas.innerHTML = "";
+  layer.innerHTML = "";
+
+  data.elements = canvasData.elements || [];
+  data.selected = canvasData.selected || null;
+
+  data.elements.forEach((elem) => {
+    createElem(elem);
+  });
+
+  syncLayerElement();
+  updateLayer();
+}
+
+let idCounter = 1;
 
 let elementTop = 0;
 let elementLeft = 0;
@@ -40,6 +64,34 @@ function elementSelector() {
   });
 }
 
+function layerSelector() {
+  layer.querySelectorAll(".layerItem").forEach((elem) => {
+    elem.classList.toggle("selected", elem.id === data.selected);
+  });
+}
+
+function updateLayer() {
+  layer.innerHTML = "";
+
+  const saved = data.elements;
+
+  saved.forEach((elem) => {
+    const div = document.createElement("div");
+    div.style.backgroundColor = "#c2c6cc";
+    div.innerText = elem.type;
+    div.id = elem.id;
+    div.classList.add("layerItem");
+    layer.appendChild(div);
+
+    String(elem.id) === data.selected ? div.classList.add("selected") : "";
+  });
+}
+
+function syncLayerElement() {
+  elementSelector();
+  layerSelector();
+}
+
 function createElem(elem) {
   const div = document.createElement("div");
   div.classList.add("element", "rect");
@@ -48,7 +100,7 @@ function createElem(elem) {
   div.style.height = elem.type === "rect" ? elem.height + "px" : "fit-content";
   div.style.left = elem.x + "px";
   div.style.top = elem.y + "px";
-  div.style.zIndex = elem.id;
+  div.style.zIndex = elem.zIndex;
   div.style.backgroundColor = elem.styles.bg;
   elem.content
     ? (div.innerText = elem.content)
@@ -56,16 +108,15 @@ function createElem(elem) {
       : null
     : null;
   canvas.appendChild(div);
-  data.selected = String(elem.id);
-  elementSelector();
 }
 
 rectButton.addEventListener("click", () => {
   const width = 250;
   const height = 250;
+  const id = idCounter++;
   let rect = {
-    id: id++,
     type: "rect",
+    id,
     width,
     height,
     y: increaseElemTop(height),
@@ -74,18 +125,23 @@ rectButton.addEventListener("click", () => {
       bg: "red",
       borderRadius: 30,
     },
+    zIndex: id,
   };
   data.elements.push(rect);
-  data.selected = rect.id;
+  data.selected = String(id);
   createElem(rect);
+  updateLayer();
+  syncLayerElement();
+  saveLocalStorage();
 });
 
 textButton.addEventListener("click", () => {
   const width = 250;
   const height = 250;
+  const id = idCounter++;
   let text = {
-    id: id++,
     type: "text",
+    id,
     width,
     height,
     y: increaseElemTop(height),
@@ -94,16 +150,31 @@ textButton.addEventListener("click", () => {
       bg: "transparent",
       borderRadius: 30,
     },
+    zIndex: id,
     content: "some text",
   };
   data.elements.push(text);
-  data.selected = text.id;
+  data.selected = String(id);
   createElem(text);
+  updateLayer();
+  syncLayerElement();
+  saveLocalStorage();
 });
 
 canvas.addEventListener("click", (e) => {
   const elementId = e.target.id;
   if (!elementId) data.selected = null;
   else data.selected = elementId;
-  elementSelector();
+  syncLayerElement();
+  saveLocalStorage();
 });
+
+layer.addEventListener("click", (elem) => {
+  const itemId = elem.target.id;
+  if (!itemId) data.selected = null;
+  else data.selected = itemId;
+  syncLayerElement();
+  saveLocalStorage();
+});
+
+getLocalStorage();
