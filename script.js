@@ -364,13 +364,109 @@ function updateTextContent() {
   data.elements.forEach((elem) => createElem(elem));
 }
 
-function addResizeHandles(div) {
+function addResizeHandles(div, elem) {
   const hadles = ["tl", "tr", "bl", "br"];
 
   hadles.forEach((posi) => {
     const handle = document.createElement("div");
 
     handle.classList.add("resize", posi);
+
+    handle.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+
+      prevX = e.clientX;
+      prevY = e.clientY;
+
+      function mouseMove(e) {
+        if (handle.classList.contains("tr")) {
+          if (
+            elem.width + (e.clientX - prevX) <= canvas.clientWidth &&
+            elem.width + (e.clientX - prevX) >= 40
+          ) {
+            elem.width -= prevX - e.clientX;
+          }
+          if (elem.height - (e.clientY - prevY) >= 40) {
+            elem.height += prevY - e.clientY;
+            elem.y -= prevY - e.clientY;
+          }
+
+          prevX = e.clientX;
+          prevY = e.clientY;
+
+          div.style.width = elem.width >= 40 ? elem.width + "px" : "40px";
+          div.style.height = elem.height >= 40 ? elem.height + "px" : "40px";
+          div.style.top = elem.y + "px";
+
+          syncLayerElement();
+        } else if (handle.classList.contains("br")) {
+          if (
+            elem.width + (e.clientX - prevX) <= canvas.clientWidth &&
+            elem.width + (e.clientX - prevX) >= 40
+          ) {
+            elem.width -= prevX - e.clientX;
+          }
+          if (elem.height + (e.clientY - prevY) >= 40) {
+            elem.height -= prevY - e.clientY;
+          }
+
+          prevX = e.clientX;
+          prevY = e.clientY;
+
+          div.style.width = elem.width >= 40 ? elem.width + "px" : "40px";
+          div.style.height = elem.height >= 40 ? elem.height + "px" : "40px";
+
+          syncLayerElement();
+        } else if (handle.classList.contains("tl")) {
+          if (
+            elem.x + (prevX - e.clientX) >= 0 &&
+            elem.width + (prevX - e.clientX) >= 40
+          ) {
+            elem.width += prevX - e.clientX;
+            elem.x -= prevX - e.clientX;
+          }
+          if(elem.y + (prevY - e.clientY) >= 0 && elem.height + (prevY - e.clientY) >= 40){
+            elem.height += prevY - e.clientY;
+            elem.y -= prevY - e.clientY;
+          }
+
+          prevX = e.clientX;
+          prevY = e.clientY;
+
+          div.style.width = elem.width >= 40 ? elem.width + "px" : "40px";
+          div.style.height = elem.height >= 40 ? elem.height + "px" : "40px";
+          div.style.top = elem.y + "px";
+          div.style.left = elem.x + "px";
+
+          syncLayerElement();
+        } else {
+          if(elem.x + (prevX - e.clientX) >= 0 && elem.width + (prevX - e.clientX) >= 40){
+            elem.width += prevX - e.clientX;
+            elem.x -= prevX - e.clientX;
+          }
+          elem.height -= prevY - e.clientY;
+
+          prevX = e.clientX;
+          prevY = e.clientY;
+
+          div.style.width = elem.width >= 40 ? elem.width + "px" : "40px";
+          div.style.height = elem.height >= 40 ? elem.height + "px" : "40px";
+          div.style.top = elem.y + "px";
+          div.style.left = elem.x + "px";
+
+          syncLayerElement();
+        }
+      }
+
+      function mouseUp() {
+        canvas.removeEventListener("mousemove", mouseMove);
+        canvas.removeEventListener("mouseup", mouseUp);
+        saveLocalStorage();
+      }
+
+      canvas.addEventListener("mousemove", mouseMove);
+      canvas.addEventListener("mouseup", mouseUp);
+    });
 
     div.appendChild(handle);
   });
@@ -380,18 +476,8 @@ function createElem(elem) {
   const div = document.createElement("div");
   div.classList.add("element", "rect");
   div.id = elem.id;
-  div.style.width =
-    elem.type === "rect"
-      ? elem.width + "px"
-      : elem.content.length <= 9
-        ? "fit-content"
-        : elem.width + "px";
-  div.style.height =
-    elem.type === "rect"
-      ? elem.height + "px"
-      : elem.content.length <= 9
-        ? "fit-content"
-        : elem.height + "px";
+  div.style.width = elem.width + "px";
+  div.style.height = elem.height + "px";
   div.style.left = elem.x + "px";
   div.style.top = elem.y + "px";
   div.style.zIndex = elem.zIndex;
@@ -453,7 +539,7 @@ function createElem(elem) {
   });
 
   if (String(elem.id) === data.selected) {
-    addResizeHandles(div);
+    addResizeHandles(div, elem);
   }
 
   canvas.appendChild(div);

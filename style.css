@@ -391,7 +391,6 @@ main {
 
     .element {
       position: absolute;
-      cursor: grab;
     }
 
     .element:active {
