@@ -16,6 +16,12 @@ const fillInput = document.querySelector(".fill .content .color input");
 const textAreaField = document.querySelector(".textContent textarea");
 const jsonButton = document.querySelector(".exportButtons .content .json");
 const htmlButton = document.querySelector(".exportButtons .content .html");
+const resetButton = document.querySelector(".resetButton");
+
+resetButton.addEventListener("click", () => {
+  localStorage.clear();
+  location.reload();
+});
 
 const fields = [
   widthField,

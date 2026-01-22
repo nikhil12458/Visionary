@@ -531,4 +531,27 @@ main {
       }
     }
   }
+
+  .resetButton {
+    position: absolute;
+    position: absolute;
+    bottom: 2rem;
+    right: 24%;
+    background-color: var(--text-secondary);
+    cursor: pointer;
+    z-index: 888888;
+    padding: 0.4rem 0.4rem;
+    padding-bottom: 0.1rem;
+    border-radius: 0.4rem;
+    img {
+      width: 2rem;
+      height: 2rem;
+      object-fit: cover;
+      object-position: center;
+      filter: invert(1);
+    }
+    &:active{
+      transform: scale(0.8);
+    }
+  }
 }
