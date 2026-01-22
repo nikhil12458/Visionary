@@ -11,7 +11,8 @@ const xPositionField = document.querySelector(".position .x input");
 const yPositionField = document.querySelector(".position .y input");
 const opacityField = document.querySelector(".appearance .opacity input");
 const cornerField = document.querySelector(".appearance .corner input");
-const fillInput = document.querySelector(".fill input");
+const rotateField = document.querySelector(".fill .content .rotate input");
+const fillInput = document.querySelector(".fill .content .color input");
 const textAreaField = document.querySelector(".textContent textarea");
 
 const fields = [
@@ -23,6 +24,7 @@ const fields = [
   cornerField,
   fillInput,
   textAreaField,
+  rotateField,
 ];
 
 const data = {
@@ -123,6 +125,7 @@ function syncLayerElement() {
   syncY();
   syncCorner();
   syncFill();
+  syncRotate();
   syncCirc();
 }
 
@@ -245,6 +248,23 @@ function syncOpacity() {
   opacityField.value = selectedElement.opacity;
 }
 
+function updateRotate() {
+  const selectedElement = getSelectedElem();
+
+  selectedElement.rotate = rotateField.value;
+
+  canvas.innerHTML = "";
+  data.elements.forEach((elem) => createElem(elem));
+}
+
+function syncRotate() {
+  const selectedElement = getSelectedElem();
+
+  if (!selectedElement) return (rotateField.value = 0);
+
+  rotateField.value = selectedElement.rotate;
+}
+
 function updateWidth() {
   if (!data.selected) return;
 
@@ -323,7 +343,8 @@ function updateCorner() {
 function syncCorner() {
   const selectedElement = getSelectedElem();
 
-  if (!selectedElement || selectedElement.type === "circ") return (cornerField.value = 0);
+  if (!selectedElement || selectedElement.type === "circ")
+    return (cornerField.value = 0);
 
   cornerField.value = selectedElement.corner;
 }
@@ -507,6 +528,7 @@ function createElem(elem) {
         : ""
     : "";
   div.style.opacity = elem.opacity / 100;
+  div.style.transform = `rotate(${elem.rotate}deg)`;
   elem.styles.color ? (div.style.color = elem.styles.color) : "";
   elem.content
     ? (div.innerText = elem.content)
@@ -586,6 +608,7 @@ rectButton.addEventListener("click", () => {
     zIndex: id,
     corner: 0,
     opacity: 100,
+    rotate: 0,
   };
   data.elements.push(rect);
   data.selected = String(id);
@@ -612,6 +635,7 @@ circleButton.addEventListener("click", () => {
     zIndex: id,
     corner: "50%",
     opacity: 100,
+    rotate: 0,
   };
   data.elements.push(circ);
   data.selected = String(id);
@@ -641,6 +665,7 @@ textButton.addEventListener("click", () => {
     corner: 0,
     content: "some text",
     opacity: 100,
+    rotate: 0,
   };
   data.elements.push(text);
   data.selected = String(id);
@@ -706,6 +731,11 @@ yPositionField.addEventListener("input", () => {
 
 opacityField.addEventListener("input", () => {
   updateOpacity();
+  saveLocalStorage();
+});
+
+rotateField.addEventListener("input", () => {
+  updateRotate();
   saveLocalStorage();
 });
 

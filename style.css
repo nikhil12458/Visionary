@@ -318,8 +318,36 @@ main {
           color: var(--text-primary);
         }
 
-        input {
-          width: 30%;
+        .content {
+          width: 100%;
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+
+          .color {
+            input {
+              width: 5rem;
+            }
+          }
+
+          .rotate {
+            input {
+              width: 48%;
+              background-color: #ffffff;
+              outline: 1px solid var(--accent-secondary);
+              border-radius: 0.2rem;
+              padding-inline: 0.2rem;
+              color: var(--text-secondary);
+              font-size: 1.2rem;
+              font-weight: 500;
+            }
+          }
+
+          input[type="number"]::-webkit-inner-spin-button,
+          input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
         }
       }
 
@@ -486,7 +514,7 @@ main {
       }
     }
 
-     .rect-circle {
+    .rect-circle {
       .circle {
         width: 70%;
         height: 70%;
