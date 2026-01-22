@@ -583,9 +583,7 @@ function createElem(elem) {
     canvas.addEventListener("mouseup", mouseUp);
   });
 
-  if (String(elem.id) === data.selected) {
-    addResizeHandles(div, elem);
-  }
+  addResizeHandles(div, elem);
 
   canvas.appendChild(div);
 }
