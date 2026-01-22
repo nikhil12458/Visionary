@@ -1,6 +1,7 @@
 const canvas = document.querySelector(".canvas");
 const rectButton = document.querySelector(".rect-box");
 const textButton = document.querySelector(".text-box");
+const circleButton = document.querySelector(".rect-circle");
 const layer = document.querySelector(".layers .bottom");
 const zPlus = document.querySelector(".zIndex .increase");
 const zMinus = document.querySelector(".zIndex .decrease");
@@ -122,6 +123,7 @@ function syncLayerElement() {
   syncY();
   syncCorner();
   syncFill();
+  syncCirc();
 }
 
 function deleteElement() {
@@ -212,6 +214,15 @@ function disableInputs() {
     fields.forEach((inp) => {
       inp.setAttribute("disabled", "true");
     });
+  }
+}
+
+function syncCirc() {
+  if (!data.selected) return;
+  const selectedElement = getSelectedElem();
+
+  if (selectedElement.type === "circ") {
+    cornerField.setAttribute("disabled", true);
   }
 }
 
@@ -312,7 +323,7 @@ function updateCorner() {
 function syncCorner() {
   const selectedElement = getSelectedElem();
 
-  if (!selectedElement) return (cornerField.value = 0);
+  if (!selectedElement || selectedElement.type === "circ") return (cornerField.value = 0);
 
   cornerField.value = selectedElement.corner;
 }
@@ -425,7 +436,10 @@ function addResizeHandles(div, elem) {
             elem.width += prevX - e.clientX;
             elem.x -= prevX - e.clientX;
           }
-          if(elem.y + (prevY - e.clientY) >= 0 && elem.height + (prevY - e.clientY) >= 40){
+          if (
+            elem.y + (prevY - e.clientY) >= 0 &&
+            elem.height + (prevY - e.clientY) >= 40
+          ) {
             elem.height += prevY - e.clientY;
             elem.y -= prevY - e.clientY;
           }
@@ -440,7 +454,10 @@ function addResizeHandles(div, elem) {
 
           syncLayerElement();
         } else {
-          if(elem.x + (prevX - e.clientX) >= 0 && elem.width + (prevX - e.clientX) >= 40){
+          if (
+            elem.x + (prevX - e.clientX) >= 0 &&
+            elem.width + (prevX - e.clientX) >= 40
+          ) {
             elem.width += prevX - e.clientX;
             elem.x -= prevX - e.clientX;
           }
@@ -482,7 +499,13 @@ function createElem(elem) {
   div.style.top = elem.y + "px";
   div.style.zIndex = elem.zIndex;
   div.style.backgroundColor = elem.styles.bg;
-  elem.corner ? (div.style.borderRadius = elem.corner + "px") : "";
+  elem.corner
+    ? elem.type === "rect"
+      ? (div.style.borderRadius = elem.corner + "px")
+      : elem.type === "circ"
+        ? (div.style.borderRadius = elem.corner)
+        : ""
+    : "";
   div.style.opacity = elem.opacity / 100;
   elem.styles.color ? (div.style.color = elem.styles.color) : "";
   elem.content
@@ -567,6 +590,32 @@ rectButton.addEventListener("click", () => {
   data.elements.push(rect);
   data.selected = String(id);
   createElem(rect);
+  updateLayer();
+  syncLayerElement();
+  saveLocalStorage();
+});
+
+circleButton.addEventListener("click", () => {
+  const width = 250;
+  const height = 250;
+  const id = idCounter++;
+  let circ = {
+    type: "circ",
+    id,
+    width,
+    height,
+    y: increaseElemTop(height),
+    x: increaseElemLeft(width),
+    styles: {
+      bg: "#ff0000",
+    },
+    zIndex: id,
+    corner: "50%",
+    opacity: 100,
+  };
+  data.elements.push(circ);
+  data.selected = String(id);
+  createElem(circ);
   updateLayer();
   syncLayerElement();
   saveLocalStorage();

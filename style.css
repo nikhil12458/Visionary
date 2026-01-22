@@ -486,6 +486,15 @@ main {
       }
     }
 
+     .rect-circle {
+      .circle {
+        width: 70%;
+        height: 70%;
+        background-color: var(--accent-secondary);
+        border-radius: 50%;
+      }
+    }
+
     .text-box {
       h3 {
         font-size: 1.4rem;
