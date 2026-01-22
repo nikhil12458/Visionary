@@ -402,6 +402,10 @@ function addResizeHandles(div, elem) {
   hadles.forEach((posi) => {
     const handle = document.createElement("div");
 
+    /* 
+    source of inspiration for resize code : https://youtu.be/4qyuNBlc8ho?si=TnNzaOhLEaAgyarF
+     */
+
     handle.classList.add("resize", posi);
 
     handle.addEventListener("mousedown", (e) => {
