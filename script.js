@@ -405,6 +405,53 @@ function createElem(elem) {
       : null
     : null;
 
+  /* 
+    source of inspiration for drag code : https://youtu.be/NyZSIhzz5Do?si=vC2HqYOZHGMwuI6H
+     */
+
+  div.addEventListener("mousedown", (e) => {
+    if (String(elem.id) !== data.selected) return;
+    if (e.target.classList.contains("resize")) return;
+
+    let prevX = e.clientX;
+    let prevY = e.clientY;
+
+    function mouseMove(e) {
+      let newX = prevX - e.clientX;
+      let newY = prevY - e.clientY;
+
+      prevX = e.clientX;
+      prevY = e.clientY;
+
+      if (
+        elem.x - newX >= 0 &&
+        elem.x - newX + elem.width <= canvas.clientWidth
+      ) {
+        elem.x -= newX;
+      }
+      if (
+        elem.y - newY >= 0 &&
+        elem.y - newY + elem.height <= canvas.clientHeight
+      ) {
+        elem.y -= newY;
+      }
+
+      div.style.left = elem.x + "px";
+      div.style.top = elem.y + "px";
+
+      syncLayerElement();
+    }
+
+    function mouseUp() {
+      canvas.removeEventListener("mousemove", mouseMove);
+      canvas.removeEventListener("mouseup", mouseUp);
+      saveLocalStorage();
+    }
+
+    canvas.addEventListener("mousemove", mouseMove);
+    canvas.addEventListener("mouseup", mouseUp);
+  });
+
   if (String(elem.id) === data.selected) {
     addResizeHandles(div);
   }
