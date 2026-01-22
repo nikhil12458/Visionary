@@ -14,6 +14,8 @@ const cornerField = document.querySelector(".appearance .corner input");
 const rotateField = document.querySelector(".fill .content .rotate input");
 const fillInput = document.querySelector(".fill .content .color input");
 const textAreaField = document.querySelector(".textContent textarea");
+const jsonButton = document.querySelector(".exportButtons .content .json");
+const htmlButton = document.querySelector(".exportButtons .content .html");
 
 const fields = [
   widthField,
@@ -806,6 +808,53 @@ document.addEventListener("keydown", (e) => {
       syncLayerElement();
     }
   }
+});
+
+/*
+ download functionality inspiration from : https://stackoverflow.com/questions/19721439/download-json-object-as-a-file-from-browser
+ */
+
+jsonButton.addEventListener("click", () => {
+  const dataStr =
+    "data:text/json;charset=utf-8," +
+    encodeURIComponent(JSON.stringify(data.elements));
+
+  const anchor = document.createElement("a");
+  anchor.setAttribute("href", dataStr);
+  anchor.setAttribute("download", "canvasData.json");
+  anchor.click();
+  anchor.remove();
+});
+
+htmlButton.addEventListener("click", () => {
+  const htmlContent = canvas.innerHTML;
+  const canvasElement = `
+  <html>
+  <head>
+  <title>canvas</title>
+  <style>
+  .canvas{
+  position: relative;
+  height: 100vh;
+  }
+  .element{
+  position: absolute;
+}
+  </style>
+  </head>
+  <body>
+  <div class="canvas" style="position: relative; width:${canvas.clientWidth}px; height:${canvas.clientHeight}px; border: 1px solid #000000;">${htmlContent}</div>
+  </body>
+  </html>
+  `;
+  const dataStr =
+    "data:text/html;charset=utf-8," + encodeURIComponent(canvasElement);
+
+  const anchor = document.createElement("a");
+  anchor.setAttribute("href", dataStr);
+  anchor.setAttribute("download", "canvas.html");
+  anchor.click();
+  anchor.remove();
 });
 
 disableInputs();
