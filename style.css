@@ -57,13 +57,13 @@ main {
 
   .layers {
     height: 100%;
-    width: 15rem;
+    width: 16vw;
     background-color: var(--bg-panel);
   }
 
   .properties {
     height: 100%;
-    width: 18rem;
+    width: 19vw;
     background-color: var(--bg-panel);
   }
 
