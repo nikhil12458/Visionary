@@ -132,7 +132,7 @@ main {
       display: flex;
       flex-direction: column;
       padding-top: 1rem;
-      gap: 2rem;
+      gap: 0.5rem;
 
       .dimensions {
         display: flex;
@@ -252,11 +252,11 @@ main {
             width: 2rem;
             height: 2rem;
             border: 2px solid var(--text-secondary);
-            img{
+            img {
               width: 100%;
             }
             &:active {
-              transform: scale(1.2);
+              transform: scale(0.8);
             }
           }
         }
@@ -344,6 +344,42 @@ main {
           overflow-y: auto;
         }
       }
+
+      .exportButtons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        p {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+        .content {
+          display: flex;
+          gap: 0.23rem;
+          align-items: center;
+          justify-content: center;
+          .html,
+          .json {
+            background-color: var(--bg-toolbar);
+            width: 8rem;
+            border-radius: 0.25rem;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            h3 {
+              font-weight: 700;
+              font-size: 1.4rem;
+              width: fit-content;
+              color: var(--bg-panel);
+            }
+
+            &:active {
+              transform: scale(0.8);
+            }
+          }
+        }
+      }
     }
   }
 
@@ -365,6 +401,43 @@ main {
     .element.selected {
       outline: 2px solid var(--selected-outline);
       outline-style: dashed;
+    }
+
+    .resize {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      background: rgb(0, 0, 0);
+      border: 1px solid black;
+    }
+
+    .resize {
+      display: none;
+    }
+
+    .element.selected .resize {
+      display: block;
+    }
+
+    .resize.br {
+      right: -5px;
+      bottom: -5px;
+      cursor: se-resize;
+    }
+    .resize.bl {
+      left: -5px;
+      bottom: -5px;
+      cursor: sw-resize;
+    }
+    .resize.tr {
+      right: -5px;
+      top: -5px;
+      cursor: ne-resize;
+    }
+    .resize.tl {
+      left: -5px;
+      top: -5px;
+      cursor: nw-resize;
     }
   }
 

@@ -364,12 +364,34 @@ function updateTextContent() {
   data.elements.forEach((elem) => createElem(elem));
 }
 
+function addResizeHandles(div) {
+  const hadles = ["tl", "tr", "bl", "br"];
+
+  hadles.forEach((posi) => {
+    const handle = document.createElement("div");
+
+    handle.classList.add("resize", posi);
+
+    div.appendChild(handle);
+  });
+}
+
 function createElem(elem) {
   const div = document.createElement("div");
   div.classList.add("element", "rect");
   div.id = elem.id;
-  div.style.width = elem.type === "rect" ? elem.width + "px" : "fit-content";
-  div.style.height = elem.type === "rect" ? elem.height + "px" : "fit-content";
+  div.style.width =
+    elem.type === "rect"
+      ? elem.width + "px"
+      : elem.content.length <= 9
+        ? "fit-content"
+        : elem.width + "px";
+  div.style.height =
+    elem.type === "rect"
+      ? elem.height + "px"
+      : elem.content.length <= 9
+        ? "fit-content"
+        : elem.height + "px";
   div.style.left = elem.x + "px";
   div.style.top = elem.y + "px";
   div.style.zIndex = elem.zIndex;
@@ -382,6 +404,11 @@ function createElem(elem) {
       ? (div.style.padding = "1rem")
       : null
     : null;
+
+  if (String(elem.id) === data.selected) {
+    addResizeHandles(div);
+  }
+
   canvas.appendChild(div);
 }
 
