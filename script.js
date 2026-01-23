@@ -544,12 +544,6 @@ function createElem(elem) {
   div.id = elem.id;
   div.style.width = elem.width + "px";
   div.style.height = elem.height + "px";
-  if (elem.type === "text") {
-    div.style.display = "block";
-    div.style.whiteSpace = "pre-wrap";
-    div.style.wordBreak = "break-word";
-  }
-
   div.style.left = elem.x + "px";
   div.style.top = elem.y + "px";
   div.style.zIndex = elem.zIndex;
