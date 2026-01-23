@@ -419,8 +419,8 @@ function addResizeHandles(div, elem) {
     handle.addEventListener("mousedown", (e) => {
       e.stopPropagation();
 
-      prevX = e.clientX;
-      prevY = e.clientY;
+      let prevX = e.clientX;
+      let prevY = e.clientY;
 
       function mouseMove(e) {
         if (handle.classList.contains("tr")) {
@@ -545,9 +545,11 @@ function createElem(elem) {
   div.style.width = elem.width + "px";
   div.style.height = elem.height + "px";
   if (elem.type === "text") {
-    div.style.display = "inline-block";
+    div.style.display = "block";
     div.style.whiteSpace = "pre-wrap";
+    div.style.wordBreak = "break-word";
   }
+
   div.style.left = elem.x + "px";
   div.style.top = elem.y + "px";
   div.style.zIndex = elem.zIndex;
