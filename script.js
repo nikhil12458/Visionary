@@ -278,7 +278,7 @@ function updateWidth() {
 
   const selectedElement = getSelectedElem();
 
-  selectedElement.width = widthField.value;
+  selectedElement.width = Number(widthField.value);
 
   canvas.innerHTML = "";
   data.elements.forEach((elem) => createElem(elem));
@@ -295,7 +295,7 @@ function syncWidth() {
 function updateHeight() {
   const selectedElement = getSelectedElem();
 
-  selectedElement.height = heightField.value;
+  selectedElement.height = Number(heightField.value);
 
   canvas.innerHTML = "";
   data.elements.forEach((elem) => createElem(elem));
