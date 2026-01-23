@@ -435,6 +435,10 @@ function addResizeHandles(div, elem) {
             elem.y -= prevY - e.clientY;
           }
 
+          if (elem.type === "circ") {
+            elem.height = elem.width;
+          }
+
           prevX = e.clientX;
           prevY = e.clientY;
 
@@ -452,6 +456,10 @@ function addResizeHandles(div, elem) {
           }
           if (elem.height + (e.clientY - prevY) >= 40) {
             elem.height -= prevY - e.clientY;
+          }
+
+          if (elem.type === "circ") {
+            elem.height = elem.width;
           }
 
           prevX = e.clientX;
@@ -477,6 +485,10 @@ function addResizeHandles(div, elem) {
             elem.y -= prevY - e.clientY;
           }
 
+          if (elem.type === "circ") {
+            elem.height = elem.width;
+          }
+
           prevX = e.clientX;
           prevY = e.clientY;
 
@@ -495,6 +507,10 @@ function addResizeHandles(div, elem) {
             elem.x -= prevX - e.clientX;
           }
           elem.height -= prevY - e.clientY;
+
+          if (elem.type === "circ") {
+            elem.height = elem.width;
+          }
 
           prevX = e.clientX;
           prevY = e.clientY;
@@ -528,6 +544,10 @@ function createElem(elem) {
   div.id = elem.id;
   div.style.width = elem.width + "px";
   div.style.height = elem.height + "px";
+  if (elem.type === "text") {
+    div.style.display = "inline-block";
+    div.style.whiteSpace = "pre-wrap";
+  }
   div.style.left = elem.x + "px";
   div.style.top = elem.y + "px";
   div.style.zIndex = elem.zIndex;
