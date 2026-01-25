@@ -514,6 +514,13 @@ main {
       }
     }
 
+    .rect-box-plus{
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+
     .rect-circle {
       .circle {
         width: 70%;
@@ -554,4 +561,19 @@ main {
       transform: scale(0.8);
     }
   }
+
+  .pluscursor{
+    position: absolute;
+    pointer-events: none;
+    z-index: 9999999;
+    transform: translate(-50%, -50%);
+    display: none;
+    img{
+      width: 2rem;
+      height: 2rem;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  
 }

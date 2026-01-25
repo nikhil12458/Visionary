@@ -17,6 +17,74 @@ const textAreaField = document.querySelector(".textContent textarea");
 const jsonButton = document.querySelector(".exportButtons .content .json");
 const htmlButton = document.querySelector(".exportButtons .content .html");
 const resetButton = document.querySelector(".resetButton");
+const plusBtn = document.querySelector(".rect-box-plus");
+const plusCursor = document.querySelector(".pluscursor");
+
+document.addEventListener("mousemove", (e) => {
+  plusCursor.style.left = e.pageX + "px";
+  plusCursor.style.top = e.pageY + "px";
+});
+
+let isDrawingMode = false;
+
+plusBtn.addEventListener("click", () => {
+  isDrawingMode = true;
+  plusCursor.style.display = "block";
+
+});
+canvas.addEventListener("mousedown", createBox);
+
+
+function createBox(e) {
+  if (!isDrawingMode) return;        
+  if (e.target !== canvas) return;   
+
+  isDrawingMode = false;
+  plusCursor.style.display = "none";
+
+  let startX = e.offsetX;
+  let startY = e.offsetY;
+
+  const id = idCounter++;
+  let rect = {
+    type: "rect",
+    id,
+    width: 0,
+    height: 0,
+    x: startX,
+    y: startY,
+    styles: { bg: "#ff0000" },
+    zIndex: id,
+    corner: 0,
+    opacity: 100,
+    rotate: 0,
+  };
+
+  data.elements.push(rect);
+  data.selected = String(id);
+  createElem(rect);
+
+  function mouseMove(e) {
+    rect.width = Math.abs(e.offsetX - startX);
+    rect.height = Math.abs(e.offsetY - startY);
+    rect.x = Math.min(startX, e.offsetX);
+    rect.y = Math.min(startY, e.offsetY);
+
+    canvas.innerHTML = "";
+    data.elements.forEach((el) => createElem(el));
+  }
+
+  function mouseUp() {
+    canvas.removeEventListener("mousemove", mouseMove);
+    canvas.removeEventListener("mouseup", mouseUp);
+    saveLocalStorage();
+  }
+
+  canvas.addEventListener("mousemove", mouseMove);
+  canvas.addEventListener("mouseup", mouseUp);
+}
+
+
 
 resetButton.addEventListener("click", () => {
   localStorage.clear();
